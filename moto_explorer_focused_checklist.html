@@ -1,0 +1,264 @@
+
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+.root { padding: 1rem 0 2rem; font-family: var(--font-sans); }
+.phase { margin-bottom: 2rem; }
+.phase-head { display: flex; align-items: center; gap: 10px; margin-bottom: 0.75rem; padding-bottom: 0.5rem; border-bottom: 0.5px solid var(--color-border-tertiary); }
+.pill { font-size: 11px; font-weight: 500; padding: 3px 10px; border-radius: 20px; white-space: nowrap; }
+.pill-blue   { background: #E6F1FB; color: #0C447C; }
+.pill-green  { background: #EAF3DE; color: #27500A; }
+.pill-teal   { background: #E1F5EE; color: #085041; }
+.pill-amber  { background: #FAEEDA; color: #633806; }
+.pill-coral  { background: #FAECE7; color: #712B13; }
+.phase-title { font-size: 15px; font-weight: 500; color: var(--color-text-primary); }
+.dates { font-size: 12px; color: var(--color-text-secondary); margin-left: auto; white-space: nowrap; }
+.track-label { font-size: 11px; font-weight: 500; color: var(--color-text-secondary); text-transform: uppercase; letter-spacing: 0.05em; margin: 0.75rem 0 0.35rem; display: flex; align-items: center; gap: 5px; }
+.tasks { display: flex; flex-direction: column; gap: 4px; }
+.task { display: flex; align-items: flex-start; gap: 8px; font-size: 13px; color: var(--color-text-primary); line-height: 1.5; background: var(--color-background-primary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-md); padding: 7px 10px; transition: background 0.15s; cursor: pointer; }
+.task:hover { background: var(--color-background-secondary); }
+.task.done { opacity: 0.45; text-decoration: line-through; }
+.task input[type=checkbox] { margin-top: 2px; flex-shrink: 0; cursor: pointer; accent-color: #378ADD; }
+.task-body { flex: 1; }
+.task-sub { font-size: 12px; color: var(--color-text-secondary); margin-top: 2px; }
+.tag { display: inline-block; font-size: 10px; padding: 1px 6px; border-radius: 8px; margin-left: 5px; vertical-align: middle; font-weight: 500; white-space: nowrap; }
+.tag-doc  { background: #E1F5EE; color: #085041; }
+.tag-arch { background: #E6F1FB; color: #0C447C; }
+.tag-gen  { background: #FAEEDA; color: #633806; }
+.progress-bar { height: 4px; background: var(--color-background-secondary); border-radius: 2px; margin-bottom: 1rem; overflow: hidden; }
+.progress-fill { height: 100%; background: #378ADD; border-radius: 2px; transition: width 0.3s; }
+.stat-row { display: flex; gap: 8px; margin-bottom: 1rem; }
+.stat { background: var(--color-background-secondary); border-radius: var(--border-radius-md); padding: 8px 12px; flex: 1; text-align: center; }
+.stat-num { font-size: 20px; font-weight: 500; color: var(--color-text-primary); }
+.stat-lbl { font-size: 11px; color: var(--color-text-secondary); margin-top: 2px; }
+.legend { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 1.25rem; font-size: 12px; color: var(--color-text-secondary); align-items: center; }
+</style>
+
+<div class="root">
+  <h2 class="sr-only">Moto Explorer — unified build checklist with architecture, system docs, ERD and database schema</h2>
+
+  <div class="stat-row">
+    <div class="stat"><div class="stat-num" id="done-count">0</div><div class="stat-lbl">done</div></div>
+    <div class="stat"><div class="stat-num" id="total-count">0</div><div class="stat-lbl">total</div></div>
+    <div class="stat"><div class="stat-num" id="pct">0%</div><div class="stat-lbl">complete</div></div>
+  </div>
+  <div class="progress-bar"><div class="progress-fill" id="prog" style="width:0%"></div></div>
+
+  <div class="legend">
+    <span><span class="tag tag-doc">doc</span> written doc</span>
+    <span><span class="tag tag-arch">arch</span> architecture diagram</span>
+    <span><span class="tag tag-gen">generate</span> ask Claude to write it</span>
+  </div>
+
+  <!-- PHASE 1 -->
+  <div class="phase">
+    <div class="phase-head">
+      <span class="pill pill-blue">Phase 1</span>
+      <span class="phase-title">Setup & design foundations</span>
+      <span class="dates">Jun 16 – Jun 22</span>
+    </div>
+
+    <div class="track-label"><i class="ti ti-file-description" aria-hidden="true"></i> System docs & architecture — before any code</div>
+    <div class="tasks">
+      <label class="task"><input type="checkbox" onchange="update()"><div class="task-body">Write the system design doc — architecture overview and key technical decisions with rationale<span class="tag tag-doc">doc</span><span class="tag tag-gen">generate</span><div class="task-sub">Why PostGIS · why WebSockets · why PWA · why ECS Fargate over EC2</div></div></label>
+      <label class="task"><input type="checkbox" onchange="update()"><div class="task-body">Draw the high-level architecture diagram — PWA · backend · DB · AWS services<span class="tag tag-arch">arch</span><span class="tag tag-gen">generate</span><div class="task-sub">Goes at the top of your README — do this first so the full system is clear in your head</div></div></label>
+      <label class="task"><input type="checkbox" onchange="update()"><div class="task-body">Draw the ERD — users, rides, route_points with all columns, types, and relationships<span class="tag tag-arch">arch</span><span class="tag tag-gen">generate</span><div class="task-sub">Do this before writing any migrations — catches data model mistakes early</div></div></label>
+      <label class="task"><input type="checkbox" onchange="update()"><div class="task-body">Write the database schema doc — every table, column, type, index, and constraint explained<span class="tag tag-doc">doc</span><span class="tag tag-gen">generate</span><div class="task-sub">Lives in docs/database.md — include the PostGIS column types and what they mean</div></div></label>
+    </div>
+
+    <div class="track-label"><i class="ti ti-tool" aria-hidden="true"></i> Repo & tooling</div>
+    <div class="tasks">
+      <label class="task"><input type="checkbox" onchange="update()"><div class="task-body">Create GitHub repo, set up monorepo structure (frontend/ backend/ infra/ docs/)<div class="task-sub">docs/ is where all your markdown and diagrams live</div></div></label>
+      <label class="task"><input type="checkbox" onchange="update()"><div class="task-body">Init TypeScript in both frontend and backend (tsconfig.json, strict mode on)</div></label>
+      <label class="task"><input type="checkbox" onchange="update()"><div class="task-body">Set up ESLint + Prettier in both packages</div></label>
+      <label class="task"><input type="checkbox" onchange="update()"><div class="task-body">Write Dockerfile for the backend (Node 20 Alpine)</div></label>
+      <label class="task"><input type="checkbox" onchange="update()"><div class="task-body">Write docker-compose.yml with backend + postgres + postgis services</div></label>
+    </div>
+
+    <div class="track-label"><i class="ti ti-database" aria-hidden="true"></i> Database</div>
+    <div class="tasks">
+      <label class="task"><input type="checkbox" onchange="update()"><div class="task-body">Enable PostGIS extension locally (CREATE EXTENSION postgis)</div></label>
+      <label class="task"><input type="checkbox" onchange="update()"><div class="task-body">Write initial schema migrations from your ERD (users, rides, route_points)</div></label>
+      <label class="task"><input type="checkbox" onchange="update()"><div class="task-body">Set up migration tool (node-pg-migrate)</div></label>
+    </div>
+
+    <div class="track-label"><i class="ti ti-server" aria-hidden="true"></i> Backend skeleton</div>
+    <div class="tasks">
+      <label class="task"><input type="checkbox" onchange="update()"><div class="task-body">Set up Express + TypeScript, health check route (GET /health)</div></label>
+      <label class="task"><input type="checkbox" onchange="update()"><div class="task-body">Connect to PostgreSQL with node-postgres, connection pool via env vars</div></label>
+      <label class="task"><input type="checkbox" onchange="update()"><div class="task-body">Add JWT auth — POST /auth/register and POST /auth/login</div></label>
+    </div>
+
+    <div class="track-label"><i class="ti ti-map" aria-hidden="true"></i> Frontend skeleton</div>
+    <div class="tasks">
+      <label class="task"><input type="checkbox" onchange="update()"><div class="task-body">Scaffold React + Vite + TypeScript, add vite-plugin-pwa</div></label>
+      <label class="task"><input type="checkbox" onchange="update()"><div class="task-body">Render a basic Leaflet map centered on your city</div></label>
+      <label class="task"><input type="checkbox" onchange="update()"><div class="task-body">Add login/register page, hook up to backend auth endpoints</div></label>
+    </div>
+  </div>
+
+  <!-- PHASE 2 -->
+  <div class="phase">
+    <div class="phase-head">
+      <span class="pill pill-green">Phase 2</span>
+      <span class="phase-title">Core ride tracking</span>
+      <span class="dates">Jun 23 – Jul 6</span>
+    </div>
+
+    <div class="track-label"><i class="ti ti-file-description" aria-hidden="true"></i> Docs</div>
+    <div class="tasks">
+      <label class="task"><input type="checkbox" onchange="update()"><div class="task-body">Draw the real-time data flow diagram — GPS point from phone through WebSocket to PostGIS<span class="tag tag-arch">arch</span><span class="tag tag-gen">generate</span><div class="task-sub">Shows the full tracking loop end to end — great for interviews</div></div></label>
+      <label class="task"><input type="checkbox" onchange="update()"><div class="task-body">Update the database schema doc with any schema changes made during this phase<span class="tag tag-doc">doc</span><div class="task-sub">Keep docs/database.md in sync with your actual migrations</div></div></label>
+    </div>
+
+    <div class="track-label"><i class="ti ti-server" aria-hidden="true"></i> Backend</div>
+    <div class="tasks">
+      <label class="task"><input type="checkbox" onchange="update()"><div class="task-body">Add WebSocket server with socket.io</div></label>
+      <label class="task"><input type="checkbox" onchange="update()"><div class="task-body">POST /rides — create new ride, return rideId</div></label>
+      <label class="task"><input type="checkbox" onchange="update()"><div class="task-body">WebSocket event: receive GPS point, insert into route_points as PostGIS POINT</div></label>
+      <label class="task"><input type="checkbox" onchange="update()"><div class="task-body">PATCH /rides/:id/end — mark complete, compute distance with ST_Length</div></label>
+      <label class="task"><input type="checkbox" onchange="update()"><div class="task-body">GET /rides/:id — return full route as GeoJSON</div></label>
+    </div>
+
+    <div class="track-label"><i class="ti ti-map" aria-hidden="true"></i> Frontend</div>
+    <div class="tasks">
+      <label class="task"><input type="checkbox" onchange="update()"><div class="task-body">Build Start / Stop ride button UI</div></label>
+      <label class="task"><input type="checkbox" onchange="update()"><div class="task-body">Hook into navigator.geolocation.watchPosition()</div></label>
+      <label class="task"><input type="checkbox" onchange="update()"><div class="task-body">Connect to WebSocket, stream GPS points to backend in real time</div></label>
+      <label class="task"><input type="checkbox" onchange="update()"><div class="task-body">Draw live route as a polyline on the Leaflet map as points arrive</div></label>
+      <label class="task"><input type="checkbox" onchange="update()"><div class="task-body">Show live stats during a ride — time elapsed, distance</div></label>
+      <label class="task"><input type="checkbox" onchange="update()"><div class="task-body">Test full loop on your actual phone in your neighborhood</div></label>
+    </div>
+  </div>
+
+  <!-- PHASE 3 -->
+  <div class="phase">
+    <div class="phase-head">
+      <span class="pill pill-green">Phase 3</span>
+      <span class="phase-title">Coverage map & ride history</span>
+      <span class="dates">Jul 7 – Jul 20</span>
+    </div>
+
+    <div class="track-label"><i class="ti ti-file-description" aria-hidden="true"></i> Docs</div>
+    <div class="tasks">
+      <label class="task"><input type="checkbox" onchange="update()"><div class="task-body">Update system design doc — document how the coverage calculation works<span class="tag tag-doc">doc</span><div class="task-sub">ST_Union + ST_Buffer + ST_Intersects — explain the spatial query strategy in plain English</div></div></label>
+      <label class="task"><input type="checkbox" onchange="update()"><div class="task-body">Update database schema doc with any new tables or columns added this phase<span class="tag tag-doc">doc</span></div></label>
+    </div>
+
+    <div class="track-label"><i class="ti ti-server" aria-hidden="true"></i> Backend</div>
+    <div class="tasks">
+      <label class="task"><input type="checkbox" onchange="update()"><div class="task-body">GET /rides — list all past rides (id, date, distance, duration)</div></label>
+      <label class="task"><input type="checkbox" onchange="update()"><div class="task-body">GET /coverage — return merged GeoJSON using ST_Union + ST_Buffer</div></label>
+      <label class="task"><input type="checkbox" onchange="update()"><div class="task-body">Compute city coverage % using ST_Intersects spatial join against OpenStreetMap road data</div></label>
+    </div>
+
+    <div class="track-label"><i class="ti ti-map" aria-hidden="true"></i> Frontend</div>
+    <div class="tasks">
+      <label class="task"><input type="checkbox" onchange="update()"><div class="task-body">Build ride history list — date, distance, duration per ride</div></label>
+      <label class="task"><input type="checkbox" onchange="update()"><div class="task-body">Click a past ride to see its full route on the map</div></label>
+      <label class="task"><input type="checkbox" onchange="update()"><div class="task-body">Render the coverage layer — all roads you've ridden highlighted on the map</div></label>
+      <label class="task"><input type="checkbox" onchange="update()"><div class="task-body">Add a coverage stats card — "You've explored X% of Ottawa"</div></label>
+    </div>
+  </div>
+
+  <!-- PHASE 4 -->
+  <div class="phase">
+    <div class="phase-head">
+      <span class="pill pill-blue">Phase 4</span>
+      <span class="phase-title">AWS deployment</span>
+      <span class="dates">Jul 21 – Aug 3</span>
+    </div>
+
+    <div class="track-label"><i class="ti ti-file-description" aria-hidden="true"></i> Docs</div>
+    <div class="tasks">
+      <label class="task"><input type="checkbox" onchange="update()"><div class="task-body">Draw the AWS infrastructure diagram — VPC · subnets · ECS · RDS · S3 · CloudFront · API Gateway<span class="tag tag-arch">arch</span><span class="tag tag-gen">generate</span><div class="task-sub">Draw after provisioning so it matches reality exactly</div></div></label>
+      <label class="task"><input type="checkbox" onchange="update()"><div class="task-body">Update system design doc — add the full AWS deployment section<span class="tag tag-doc">doc</span><span class="tag tag-gen">generate</span><div class="task-sub">How each service connects, why each was chosen, estimated monthly cost</div></div></label>
+    </div>
+
+    <div class="track-label"><i class="ti ti-cloud" aria-hidden="true"></i> Deploy</div>
+    <div class="tasks">
+      <label class="task"><input type="checkbox" onchange="update()"><div class="task-body">Set up IAM user with least-privilege permissions</div></label>
+      <label class="task"><input type="checkbox" onchange="update()"><div class="task-body">Push Docker image to ECR</div></label>
+      <label class="task"><input type="checkbox" onchange="update()"><div class="task-body">Provision RDS PostgreSQL with PostGIS extension enabled</div></label>
+      <label class="task"><input type="checkbox" onchange="update()"><div class="task-body">Deploy backend to ECS Fargate</div></label>
+      <label class="task"><input type="checkbox" onchange="update()"><div class="task-body">Build PWA and upload to S3 with static website hosting</div></label>
+      <label class="task"><input type="checkbox" onchange="update()"><div class="task-body">Set up CloudFront CDN in front of S3 for HTTPS</div></label>
+      <label class="task"><input type="checkbox" onchange="update()"><div class="task-body">Set up API Gateway to route traffic to ECS</div></label>
+      <label class="task"><input type="checkbox" onchange="update()"><div class="task-body">Configure CloudWatch — log groups, latency alarm, error rate alarm</div></label>
+      <label class="task"><input type="checkbox" onchange="update()"><div class="task-body">Full end-to-end test on prod — register, ride, history, coverage</div></label>
+    </div>
+  </div>
+
+  <!-- PHASE 5 -->
+  <div class="phase">
+    <div class="phase-head">
+      <span class="pill pill-teal">Phase 5</span>
+      <span class="phase-title">Terraform · CI/CD · Testing</span>
+      <span class="dates">Aug 4 – Aug 24</span>
+    </div>
+
+    <div class="track-label"><i class="ti ti-file-description" aria-hidden="true"></i> Docs</div>
+    <div class="tasks">
+      <label class="task"><input type="checkbox" onchange="update()"><div class="task-body">Draw the CI/CD pipeline diagram — GitHub push → Actions → ECR → ECS deploy<span class="tag tag-arch">arch</span><span class="tag tag-gen">generate</span></div></label>
+      <label class="task"><input type="checkbox" onchange="update()"><div class="task-body">Update system design doc — add Terraform and CI/CD strategy section<span class="tag tag-doc">doc</span></div></label>
+    </div>
+
+    <div class="track-label"><i class="ti ti-settings" aria-hidden="true"></i> Terraform</div>
+    <div class="tasks">
+      <label class="task"><input type="checkbox" onchange="update()"><div class="task-body">Write Terraform modules — VPC, ECS, RDS, S3, CloudFront, API Gateway</div></label>
+      <label class="task"><input type="checkbox" onchange="update()"><div class="task-body">Add provider-level resource tags (project, env)<div class="task-sub">Same pattern you used at Ross Video</div></div></label>
+      <label class="task"><input type="checkbox" onchange="update()"><div class="task-body">Run terraform plan + apply, verify it matches what you hand-built</div></label>
+    </div>
+
+    <div class="track-label"><i class="ti ti-git-branch" aria-hidden="true"></i> CI/CD</div>
+    <div class="tasks">
+      <label class="task"><input type="checkbox" onchange="update()"><div class="task-body">Write GitHub Actions main workflow — test → build → push to ECR → deploy to ECS</div></label>
+      <label class="task"><input type="checkbox" onchange="update()"><div class="task-body">Write PR workflow — lint + type check + tests only</div></label>
+      <label class="task"><input type="checkbox" onchange="update()"><div class="task-body">Store AWS credentials as GitHub Actions secrets</div></label>
+    </div>
+
+    <div class="track-label"><i class="ti ti-test-pipe" aria-hidden="true"></i> Testing</div>
+    <div class="tasks">
+      <label class="task"><input type="checkbox" onchange="update()"><div class="task-body">Write Playwright tests — register, login, start + stop a ride</div></label>
+      <label class="task"><input type="checkbox" onchange="update()"><div class="task-body">Write Playwright test — view ride history, verify route on map</div></label>
+      <label class="task"><input type="checkbox" onchange="update()"><div class="task-body">Add Playwright to the PR workflow in GitHub Actions</div></label>
+    </div>
+  </div>
+
+  <!-- PHASE 6 -->
+  <div class="phase">
+    <div class="phase-head">
+      <span class="pill pill-coral">Phase 6</span>
+      <span class="phase-title">Polish & wrap up</span>
+      <span class="dates">Aug 25 – Aug 31</span>
+    </div>
+
+    <div class="track-label"><i class="ti ti-file-text" aria-hidden="true"></i> Final docs & README</div>
+    <div class="tasks">
+      <label class="task"><input type="checkbox" onchange="update()"><div class="task-body">Final review of system design doc — update anything that changed during the build<span class="tag tag-doc">doc</span></div></label>
+      <label class="task"><input type="checkbox" onchange="update()"><div class="task-body">Final review of database schema doc — confirm it matches the actual schema<span class="tag tag-doc">doc</span></div></label>
+      <label class="task"><input type="checkbox" onchange="update()"><div class="task-body">Collect all architecture diagrams into docs/ and link from the README<span class="tag tag-arch">arch</span></div></label>
+      <label class="task"><input type="checkbox" onchange="update()"><div class="task-body">Write the README — title, screenshot, tech stack with rationale, architecture diagram, setup guide, live link<span class="tag tag-doc">doc</span><span class="tag tag-gen">generate</span></div></label>
+      <label class="task"><input type="checkbox" onchange="update()"><div class="task-body">Record a 2–3 min demo video of the app in action</div></label>
+      <label class="task"><input type="checkbox" onchange="update()"><div class="task-body">Add project to resume with tech stack, GitHub link, and 2–3 strong bullet points</div></label>
+      <label class="task"><input type="checkbox" onchange="update()"><div class="task-body">Post on LinkedIn with demo video<div class="task-sub">Recruiters browse LinkedIn — a post with a demo gets real traction</div></div></label>
+    </div>
+  </div>
+
+</div>
+
+<script>
+function update() {
+  const all = document.querySelectorAll('.task input[type=checkbox]');
+  const done = document.querySelectorAll('.task input[type=checkbox]:checked');
+  const total = all.length;
+  const doneCount = done.length;
+  const pct = total ? Math.round(doneCount / total * 100) : 0;
+  document.getElementById('done-count').textContent = doneCount;
+  document.getElementById('total-count').textContent = total;
+  document.getElementById('pct').textContent = pct + '%';
+  document.getElementById('prog').style.width = pct + '%';
+  done.forEach(cb => cb.closest('.task').classList.add('done'));
+  document.querySelectorAll('.task input[type=checkbox]:not(:checked)').forEach(cb => cb.closest('.task').classList.remove('done'));
+}
+update();
+</script>
