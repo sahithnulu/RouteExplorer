@@ -4,7 +4,7 @@ A Web App for motorcycle riders to track their routes in real time via GPS and v
 
 ## Architecture
 
-![Architecture diagram](Images/Architecture.png)
+![Architecture diagram](docs/Images/Architecture.png)
 
 1) The browser visits the URL and CloudFront delivers the React app's static files 
    (HTML, JS, CSS) from S3 to the browser — this is a one-time load
@@ -20,3 +20,5 @@ A Web App for motorcycle riders to track their routes in real time via GPS and v
    with the PostGIS extension enabling geographic data types and spatial queries
 
 5) Terraform defines all the AWS infrastructure above as code
+
+## Instructions
