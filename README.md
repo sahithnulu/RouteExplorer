@@ -22,3 +22,8 @@ A Web App for motorcycle riders to track their routes in real time via GPS and v
 5) Terraform defines all the AWS infrastructure above as code
 
 ## Instructions
+
+Quick note : node-pg-migrate is dev tool, manages changes to database schema in a controlled way, like git but for database schemas
+
+# Command to get inside postgres docker conainer
+docker exec -it postgresdb psql -U postgres -d routeexplorer

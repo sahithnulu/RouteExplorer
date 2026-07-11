@@ -2,6 +2,7 @@ services:
   postgres:
     container_name: postgresdb 
     image: postgis/postgis
+    platform: linux/amd64 
     ports:
       - "5432:5432"
     environment:
