@@ -1,6 +1,7 @@
 import express from "express";
 import pool from "../db";
 import bcrypt from "bcrypt";
+import jwt from 'jsonwebtoken'
 
 import { createAccessToken, createRefreshToken } from '../utils/token';
 
@@ -52,6 +53,23 @@ authRouter.post("/login", async (req, res) => {
         console.error("Error during login:", error);
         res.status(500).json({ message: "Internal server error" });
     }
+})
+
+authRouter.post('/refresh', async (req, res) => {
+  try {
+    const { refreshToken } = req.body
+
+    if (!refreshToken) {
+      return res.status(401).json({ message: 'No refresh token provided' })
+    }
+
+    const decoded = jwt.verify(refreshToken, process.env.JWT_SECRET || 'secret') as { userId: string }
+    const accessToken = createAccessToken(decoded.userId)
+
+    res.status(200).json({ accessToken })
+  } catch (error) {
+    return res.status(401).json({ message: 'Invalid or expired refresh token' })
+  }
 })
 
 export default authRouter;

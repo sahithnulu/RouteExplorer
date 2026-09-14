@@ -3,12 +3,26 @@ import MapView from './components/MapView'
 import Login from './pages/Login'
 import Register from './pages/Register'
 
+const isAuthenticated = () => {
+  const token = localStorage.getItem('accessToken')
+  const refreshToken = localStorage.getItem('refreshToken')
+  return !!(token || refreshToken)
+}
+
+const ProtectedRoute = ({ children }: { children: JSX.Element }) => {
+  return isAuthenticated() ? children : <Navigate to="/login" />
+}
+
+const AuthRoute = ({ children }: { children: JSX.Element }) => {
+  return isAuthenticated() ? <Navigate to="/" /> : children
+}
+
 function App() {
   return (
     <Routes>
-      <Route path="/" element={<MapView />} />
-      <Route path="/login" element={<Login />} />
-      <Route path="/register" element={<Register />} />
+      <Route path="/" element={<ProtectedRoute><MapView /></ProtectedRoute>} />
+      <Route path="/login" element={<AuthRoute><Login /></AuthRoute>} />
+      <Route path="/register" element={<AuthRoute><Register /></AuthRoute>} />
       <Route path="*" element={<Navigate to="/" />} />
     </Routes>
   )
