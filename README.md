@@ -131,3 +131,7 @@ npm run dev
 
 ### 8. Open the app
 Go to `http://localhost:5173` in your browser.
+
+## Todo
+
+- [ ] Add an Application Load Balancer (ALB) with an SSL certificate in front of ECS to support WebSocket connections in production — currently GPS point saving only works in local development
