@@ -22,21 +22,20 @@ Live demo: https://d2qkty4qjnsns4.cloudfront.net
 
 ## Tech stack
 
-| Layer | Technology | Why |
+| Layer | Technology |
 |---|---|---|
-| Frontend | React + TypeScript | Component-based UI with full type safety |
-| Build tool | Vite + vite-plugin-pwa | Fast builds, PWA support — no app store needed |
-| Map | Leaflet.js | Lightweight, open source map library |
-| Backend | Node.js + Express + TypeScript | Fast, lightweight REST API |
-| Real-time | Socket.io | WebSocket abstraction for live GPS streaming |
-| Database | PostgreSQL 15 | Reliable relational database |
-| Geospatial | PostGIS | Industry-standard spatial extension — enables geographic queries like ST_Length, ST_Intersects, ST_Union |
-| Auth | JWT (access + refresh tokens) | Stateless auth, no session storage needed |
-| Containerization | Docker + docker-compose | Reproducible local dev environment |
-| Cloud | AWS (ECS Fargate, RDS, S3, CloudFront, API Gateway) | Production-grade managed infrastructure |
-| IaC | Terraform | All AWS infrastructure defined as code |
-| CI/CD | GitHub Actions | Automated test, build, and deploy pipeline |
-| Migrations | node-pg-migrate | Version-controlled database schema changes |
+| Frontend | React + TypeScript + Vite|
+| Map | Leaflet.js |
+| Backend | Node.js + Express + TypeScript |
+| WebSockets | Socket.io |
+| Database | PostgreSQL 15 |
+| Geospatial | PostGIS |
+| Auth | JWT (access + refresh tokens) |
+| Containerization | Docker + docker-compose |
+| Cloud | AWS (ECS Fargate, RDS, S3, CloudFront, API Gateway) |
+| IaC | Terraform |
+| CI/CD | GitHub Actions |
+| Migrations | node-pg-migrate |
 
 ---
 
