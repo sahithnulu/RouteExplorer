@@ -2,6 +2,8 @@
 
 A Progressive Web App for motorcycle riders to track their routes in real time via GPS, visualize all past rides on a map, and see a cumulative coverage layer showing which roads in their city they have ridden.
 
+Live demo: https://d2qkty4qjnsns4.cloudfront.net
+
 ---
 
 ## Architecture
@@ -10,11 +12,11 @@ A Progressive Web App for motorcycle riders to track their routes in real time v
 
 ### How it works
 
-1. The browser visits the URL and CloudFront delivers the React PWA's static files (HTML, JS, CSS) from S3 — this is a one-time load
+1. The browser visits the URL and CloudFront delivers the React PWA's static files (HTML, JS, CSS) from S3. The browser caches these files locally so subsequent visits load instantly without hitting S3 again.
 2. All subsequent API calls and WebSocket connections go from the browser through CloudFront to API Gateway, which forwards them to ECS
 3. ECS Fargate runs a Docker container with two things inside: Node/Express handling all REST API endpoints, and Socket.io running the WebSocket server that listens for live GPS points streaming in from the phone during a ride
-4. RDS manages the database — PostgreSQL stores users, rides, and route points, with the PostGIS extension enabling geographic data types and spatial queries like computing route distances and road coverage
-5. Terraform defines and provisions all the AWS infrastructure above as code, and GitHub Actions handles CI/CD — automatically testing and deploying on every push to main
+4. RDS manages the database: PostgreSQL stores users, rides, and route points, with the PostGIS extension enabling geographic data types and spatial queries like computing route distances and road coverage
+5. Terraform defines and provisions all the AWS infrastructure above as code, and GitHub Actions handles CI/CD by automatically testing and deploying on every push to main
 
 ---
 
