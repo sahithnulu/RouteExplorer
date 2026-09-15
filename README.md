@@ -23,7 +23,7 @@ Live demo: https://d2qkty4qjnsns4.cloudfront.net
 ## Tech stack
 
 | Layer | Technology |
-|---|---|---|
+|---|---|
 | Frontend | React + TypeScript + Vite|
 | Map | Leaflet.js |
 | Backend | Node.js + Express + TypeScript |
