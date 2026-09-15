@@ -13,7 +13,7 @@ export const useRide = (
   const watchIdRef = useRef<number | null>(null)
   const sequenceRef = useRef(0)
   const startTimeRef = useRef<Date | null>(null)
-  const simulationRef = useRef<NodeJS.Timeout | null>(null)
+  const simulationRef = useRef<ReturnType<typeof setInterval> | null>(null)
 
   const [isRiding, setIsRiding] = useState(false)
   const [rideId, setRideId] = useState<string | null>(null)
@@ -67,7 +67,7 @@ export const useRide = (
     const newRideId = data.rideId
     setRideId(newRideId)
 
-    const socket = io('http://localhost:3000', { auth: { token } })
+    const socket = io('https://ram6mjcwc7.execute-api.us-east-1.amazonaws.com/prod', { auth: { token } })
     socketRef.current = socket
 
     polylineRef.current = L.polyline([], { color: '#378ADD', weight: 4 }).addTo(mapRef.current!)

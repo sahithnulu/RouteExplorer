@@ -10,7 +10,8 @@
     "dev": "ts-node-dev --respawn --transpile-only src/index.ts",
     "start": "node dist/index.js",
     "build": "tsc",
-    "migrate": "DATABASE_URL=postgresql://postgres:password123@localhost:5432/routeexplorer node-pg-migrate up -m migrations"
+    "migrate": "DATABASE_URL=postgresql://postgres:password123@localhost:5432/routeexplorer node-pg-migrate up -m migrations",
+    "migrate:prod": "DATABASE_URL=postgresql://postgres:RouteExplorer123!@routeexplorer-db.ccryu4icsxlc.us-east-1.rds.amazonaws.com:5432/routeexplorer?sslmode=no-verify node-pg-migrate up -m migrations"
   },
   "keywords": [],
   "author": "",

@@ -1,0 +1,42 @@
+{
+  "family": "routeexplorer-backend",
+  "networkMode": "awsvpc",
+  "requiresCompatibilities": ["FARGATE"],
+  "cpu": "256",
+  "memory": "512",
+  "executionRoleArn": "arn:aws:iam::308413201185:role/routeexplorer-ecs-task-execution-role",
+  "containerDefinitions": [
+    {
+      "name": "routeexplorer-backend",
+      "image": "308413201185.dkr.ecr.us-east-1.amazonaws.com/routeexplorer-backend:latest",
+      "portMappings": [
+        {
+          "containerPort": 3000,
+          "protocol": "tcp"
+        }
+      ],
+      "environment": [
+        {
+          "name": "DATABASE_URL",
+          "value": "postgresql://postgres:RouteExplorer123!@routeexplorer-db.ccryu4icsxlc.us-east-1.rds.amazonaws.com:5432/routeexplorer?sslmode=no-verify"
+        },
+        {
+          "name": "JWT_SECRET",
+          "value": "sjdfcklsadlkaosdjflksfvjdkjsfcs"
+        },
+        {
+          "name": "PORT",
+          "value": "3000"
+        }
+      ],
+      "logConfiguration": {
+        "logDriver": "awslogs",
+        "options": {
+          "awslogs-group": "/routeexplorer/backend",
+          "awslogs-region": "us-east-1",
+          "awslogs-stream-prefix": "ecs"
+        }
+      }
+    }
+  ]
+}

@@ -1,4 +1,4 @@
-const BASE_URL = 'http://localhost:3000/api'
+const BASE_URL = 'https://ram6mjcwc7.execute-api.us-east-1.amazonaws.com/prod/api'
 
 export const refreshAccessToken = async (): Promise<string | null> => {
   const refreshToken = localStorage.getItem('refreshToken')

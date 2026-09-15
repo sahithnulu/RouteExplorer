@@ -2,6 +2,7 @@ import { Routes, Route, Navigate } from 'react-router-dom'
 import MapView from './components/MapView'
 import Login from './pages/Login'
 import Register from './pages/Register'
+import React from 'react'
 
 const isAuthenticated = () => {
   const token = localStorage.getItem('accessToken')
@@ -9,11 +10,11 @@ const isAuthenticated = () => {
   return !!(token || refreshToken)
 }
 
-const ProtectedRoute = ({ children }: { children: JSX.Element }) => {
+const ProtectedRoute = ({ children }: { children: React.ReactElement }) => {
   return isAuthenticated() ? children : <Navigate to="/login" />
 }
 
-const AuthRoute = ({ children }: { children: JSX.Element }) => {
+const AuthRoute = ({ children }: { children: React.ReactElement }) => {
   return isAuthenticated() ? <Navigate to="/" /> : children
 }
 
