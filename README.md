@@ -87,10 +87,10 @@ cd RouteExplorer
 Create a `.env` file at the root:
 ```
 POSTGRES_USER="postgres"
-POSTGRES_PASSWORD="password123"
+POSTGRES_PASSWORD="yourpassword"
 POSTGRES_DB="routeexplorer"
-DATABASE_URL="postgresql://postgres:password123@postgres:5432/routeexplorer"
-DATABASE_URL_LOCAL="postgresql://postgres:password123@localhost:5432/routeexplorer"
+DATABASE_URL="postgresql://postgres:yourpassword@postgres:5432/routeexplorer"
+DATABASE_URL_LOCAL="postgresql://postgres:yourpassword@localhost:5432/routeexplorer"
 JWT_SECRET="your-secret-key"
 ```
 
