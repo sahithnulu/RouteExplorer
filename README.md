@@ -38,25 +38,6 @@ A Progressive Web App for motorcycle riders to track their routes in real time v
 
 ---
 
-## Architecture decisions
-
-**Why PostGIS over plain lat/lng columns?**
-Storing coordinates as two float columns works for simple cases but makes spatial queries painful. PostGIS adds native geometry types and a full library of spatial functions — the same technology used by Uber, Lyft, and Google Maps. It lets us compute route distances, merge coverage polygons, and query road intersections in a single SQL statement.
-
-**Why WebSockets over HTTP polling?**
-GPS points arrive every 3–5 seconds during a ride. HTTP polling at that frequency creates significant overhead with a new TCP handshake on each request. A persistent WebSocket connection sends only the payload on each event, and Socket.io handles reconnection automatically — important on a mobile network.
-
-**Why a PWA over a native app?**
-No App Store approval, no $99/year developer fee, no install flow. Users visit a URL and it works on both iOS and Android. Updates deploy instantly. The only tradeoff is that iOS restricts background GPS for PWAs, so the screen must stay on during a ride.
-
-**Why ECS Fargate over EC2?**
-Fargate runs containers without managing the underlying virtual machine. No patching, no capacity planning. It scales automatically and the operational simplicity outweighs the slightly higher per-request cost for a project of this size.
-
-**Why Terraform?**
-Manual console setup is not reproducible. Terraform provides a complete, version-controlled description of every AWS resource — if the environment needs to be rebuilt, one command recreates everything.
-
----
-
 ## Project structure
 
 ```
@@ -148,53 +129,3 @@ npm run dev
 
 ### 8. Open the app
 Go to `http://localhost:5173` in your browser.
-
----
-
-## Database schema
-
-### users
-| Column | Type | Description |
-|---|---|---|
-| id | UUID | Primary key, auto-generated |
-| email | VARCHAR(100) | Unique, not null |
-| password_hash | VARCHAR(255) | bcrypt hashed password |
-| created_at | TIMESTAMP | Account creation time |
-
-### rides
-| Column | Type | Description |
-|---|---|---|
-| id | UUID | Primary key, auto-generated |
-| user_id | UUID | Foreign key → users.id |
-| started_at | TIMESTAMP | When the ride began |
-| ended_at | TIMESTAMP | When the ride ended |
-| distance_meters | FLOAT | Computed by PostGIS ST_Length |
-| duration_seconds | INTEGER | Difference between start and end |
-| status | VARCHAR(20) | active or completed |
-
-### route_points
-| Column | Type | Description |
-|---|---|---|
-| id | UUID | Primary key, auto-generated |
-| ride_id | UUID | Foreign key → rides.id |
-| location | GEOGRAPHY(POINT, 4326) | PostGIS geographic point |
-| recorded_at | TIMESTAMP | When the GPS ping fired |
-| sequence_number | INTEGER | Preserves point order |
-
----
-
-## Useful commands
-
-```bash
-# Connect to local PostgreSQL
-docker exec -it postgresdb psql -U postgres -d routeexplorer
-
-# Run database migrations
-cd backend && npm run migrate
-
-# Build backend Docker image
-docker build -t routeexplorer-backend ./backend
-
-# View running containers
-docker-compose ps
-```
