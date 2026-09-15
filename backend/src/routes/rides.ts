@@ -96,7 +96,7 @@ ridesRouter.get('/:id', authenticateToken, async (req, res) => {
       ride: ride.rows[0],
       geoJSON: {
         type: 'FeatureCollection',
-        features: points.rows.map((row) => ({
+        features: points.rows.map((row: any) => ({
           type: 'Feature',
           geometry: row.geometry,
           properties: {
