@@ -4,4 +4,9 @@ frontend/node_modules
 .env
 node_modules/
 .DS_Store
-dist/
+dist/infra/.terraform/
+infra/.terraform.lock.hcl
+infra/terraform.tfstate
+infra/terraform.tfstate.backup
+task-definition.json
+.terraform/
